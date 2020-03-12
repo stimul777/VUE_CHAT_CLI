@@ -1,16 +1,15 @@
 <template>
   <div id="app_chat">
-  <div class="menu">
-    <div class="back"><i class="fa fa-chevron-left"></i> <img src="" draggable="false" />
+    <div class="menu">
+      <div class="back"> <img src="" draggable="false" /></div>
     </div>
-  </div>
   <ol class="chat">
     <li class="other">
-      <div class="avatar"><img src="" draggable="false" /></div>
+      <div class="avatar"> <img src="" draggable="false" /></div>
       <div class="msg">
-        <p>Copón</p>
+        <p>Имя</p>
         <p>
-          <emoji class="funny" />
+          Текст
         </p>
         <time>18:08</time>
       </div>
@@ -18,27 +17,27 @@
     <li class="self">
       <div class="avatar"><img src="" draggable="false" /></div>
       <div class="msg">
-        <p>Hey there's a new update about this chat UI with more responsive elements! Check it now:</p>
+        <p>Длинное сообщение</p>
         <p><a href="https://codepen.io/Varo/pen/YPmwpQ" target="parent">Chat UI 2.0</a></p>
         <time>18:09</time>
       </div>
     </li>
   </ol>
-  <div class="add_file"><div>
+  <div class="add_file">
+    <div>
       <label class="add_file_label">
       <span class="add_file_title">+</span>
-      <input type="file" accept="image/*" id="button_add_img" @input = "uploadImg">
+      <input type="file" accept="image/*" id="button_add_img" @input = 'uploadImg'>
       </label>
-  </div>    
-    </div>
+    </div>    
+  </div>
   <div><img  class="img_conteiner" id="img_conteiner_box" src="#"  /></div>
   <div>
      <input class="textarea" type="text" placeholder="Введите сообщение..."/>  
   </div>
-    <div><button>Send</button></div>
+    <div><button v-on:click = 'sendImg'>Send</button></div>
   </div>
 </template>
-
 
   <script>
   export default {
@@ -47,25 +46,47 @@
       return {
       }
   },
+
   methods: {
+
     uploadImg() {
-      var file = document.querySelector('#button_add_img').files[0];
-      var previewImg = document.querySelector('#img_conteiner_box');
-      var reader = new FileReader();
+      const file = document.querySelector('#button_add_img').files[0];
+      const previewImg = document.querySelector('#img_conteiner_box');
+      const reader = new FileReader();
       
-      reader.onloadend = function () {
+       reader.onloadend = function () {
        previewImg.src = reader.result;
      }
 
       if (file) {
         reader.readAsDataURL(file);
-        console.log(file);
       } else {
         previewImg.src = "";
       }
+    },
+
+    sendImg(previewImg) {
+      let xhr = new XMLHttpRequest();
+      // отслеживаем процесс отправки
+      xhr.upload.onprogress = function(event) {
+      console.log(`Отправлено ${event.loaded} из ${event.total}`);
+     };
+
+    // Ждём завершения: неважно, успешного или нет
+    xhr.onloadend = function() {
+    if (xhr.status == 200) {
+      console.log("Успех");
+    } else {
+      console.log("Ошибка " + this.status);
     }
+  };
+
+  xhr.open("POST", "/article/xmlhttprequest/post/upload");
+  xhr.send(previewImg);
+      }
+    }  
   }
-}
+
 </script>
 
 
@@ -88,8 +109,11 @@ a {
   color: rgba(82,179,217,0.9);
 }
 
+/* #app_chat {
+  display: flex;
+} */
+
 .img_conteiner {
- 
   width: 100px;
   height: 50px;
   border: 1px solid green;
