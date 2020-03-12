@@ -3,11 +3,7 @@
     <div class="menu">
       <div class="back"> <img src="" draggable="false" /></div>
     </div>
- 
-
-  
- <!-- <div><button v-on:click = 'sendImg'>Send</button></div> -->
-
+  <div class="body_chat"></div>
   <div class="elements_conteiner" >
     <div class="button_add_file">
        <label class="button_add_file_label">
@@ -15,79 +11,82 @@
          <input type="file" accept="image/*" id="button_add_img" @input = 'uploadImg'>
       </label>   
      </div> 
-     <div class="enter_message"><input  type="text" placeholder="Введите сообщение..."/> </div>
+     <div class="enter_message"><input  type="text" @keyup.enter = "sendMessage" placeholder="Введите сообщение..."/> </div>
       <div><img id="img_conteiner_box" src="#" /></div>
   </div>
-
- 
-
   </div>
 </template>
 
   <script>
   export default {
-  name: '#app_chat',
+  el: '#app_chat',
   data() {
       return {
       }
   },
 
   methods: {
-
-    uploadImg() {
-      const file = document.querySelector('#button_add_img').files[0];
-      const previewImg = document.querySelector('#img_conteiner_box');
-      const reader = new FileReader();
-      
-       reader.onloadend = function () {
-       previewImg.src = reader.result;
+    uploadImg: function() {
+     this.test = 110;
+     let file = document.querySelector('#button_add_img').files[0];
+     let previewImg = document.querySelector('#img_conteiner_box');
+     let reader = new FileReader();
+     reader.onloadend = function () {
+      previewImg.src = reader.result;
      }
-
       if (file) {
         reader.readAsDataURL(file);
-      } else {
-        previewImg.src = "";
+        previewImg.style.display = "flex";
+      } 
+      else {
+        previewImg.style.display = "none";
       }
     },
 
-    sendImg(previewImg) {
-      let xhr = new XMLHttpRequest();
-      // отслеживаем процесс отправки
-      xhr.upload.onprogress = function(event) {
-      console.log(`Отправлено ${event.loaded} из ${event.total}`);
-     };
+    sendMessage: function() {
+    // const file = document.querySelector('#button_add_img').files[0];
+    // if(!file) {
+    //   // alert('введите сообщение!');
+    //   return;
+    //     }
+    let messageSendBody = document.createElement('img');
+    messageSendBody.className = 'messageSendBody';
+    // messageSendBody= this.reader;
+    console.log(this.test);
+    
 
-    // Ждём завершения: неважно, успешного или нет
-    xhr.onloadend = function() {
-    if (xhr.status == 200) {
-      console.log("Успех");
-    } else {
-      console.log("Ошибка " + this.status);
-    }
-  };
+   document.querySelector('.body_chat').append(messageSendBody);
 
-  xhr.open("POST", "/article/xmlhttprequest/post/upload");
-  xhr.send(previewImg);
       }
     }  
   }
-
+  
 </script>
 
 
-<style scoped>
-/* @import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700);
-@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css); */
-
-
+<style>
 #app_chat {
   /* display: flex; */
   /* align-content: stretch ; */
+  
   position:relative;
   width: auto;
   max-width: 1000px;
   height: 700px;
   border: 1px solid black;
+}
+
+/* Тело чата */
+.body_chat {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: auto;
+  height: 84%;
+  border: 1px solid red;
+  
+
 }
 
 /* Шапка  */
@@ -147,11 +146,12 @@
   /* margin-top: auto;
   top: 200px; */
   width: 100%;
-  border: 2px solid  black;
+  /* border: 1px solid  black; */
+ background-color: rgb(147, 255, 147);
 }
 
 #img_conteiner_box {
-  /* display: flex; */
+  display: none;
   width: 100px;
   height: 50px;
   border: 1px solid red;
@@ -162,28 +162,32 @@
   width: 100%;
 }
 
+.messageSendBody {
+  margin: 5px;
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  background-color: red;
+}
+
 .enter_message input {
     height: 100%;
     width: 100%;
-    background: hsl(125, 57%, 64%);
+    background: rgb(147, 255, 147);
     border: none;
     outline: none;
     color: #666;
 }
 
 .button_add_file {
-    /* position: fixed;
-    display: block; */
     bottom: 22px;
-    /* left: 1px; */
-    /* width: 30px;
-    height: 30px; */
-    /* background-image: url(https://fonts.googleapis.com/icon?family=Material+Icons); */
+    background-image: url(https://fonts.googleapis.com/icon?family=Material+Icons); 
     height: 100%;
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 100;
     cursor: pointer;
+    background-color: rgb(147, 255, 147);
 }
 
 .button_add_file:active {
@@ -208,19 +212,11 @@
   transition: border 300ms ease;
   cursor: pointer;
   text-align: center;
+  
 }
-
-/* .button_add_file .button_add_file_label i{
-  display:block;font-size:42px;padding-bottom:16px
-  } */
-
-/* .button_add_file .button_add_file_label i,.button_add_file .button_add_file_label .button_add_file_title{
-  color:grey;transition:200ms color
-  } */
 
 .button_add_file .button_add_file_label:hover{
   border:2px solid #000
   }
   
-/* .button_add_file .button_add_file_label:hover i,.button_add_file .button_add_file_label:hover .button_add_file_title{color:#000} */
 </style>
