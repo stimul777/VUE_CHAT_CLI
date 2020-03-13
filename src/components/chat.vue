@@ -11,7 +11,7 @@
          <input type="file" accept="image/*" id="button_add_img" @input = 'uploadImg'>
       </label>   
      </div> 
-     <div class="enter_message"><input type="text" id = 'send_message_input' @keyup.enter = "sendMessage" placeholder="Введите сообщение..." value=""/> </div>
+     <div class = "enter_message"><input type="text" id = 'send_message_input' @keyup.enter = "sendMessage" placeholder="Введите сообщение..." value=""/> </div>
       <div><img id="img_conteiner_box" src="#" /></div>
   </div>
   </div>
@@ -21,14 +21,10 @@
   export default {
   el: '#app_chat',
   // data() {
-     
+
   // },
-  
   methods: {
     uploadImg() {
-     this.previewImg = false;
-     this.reader = '';
-     this.file = '';
      this.file = document.querySelector('#button_add_img').files[0];
      this.previewImg = document.querySelector('#img_conteiner_box');
      this.reader = new FileReader();
@@ -36,6 +32,7 @@
      this.reader.onloadend = () => {
       this.previewImg.src = this.reader.result;
      }
+
       if (this.file) {
         this.reader.readAsDataURL(this.file);
         this.previewImg.style.display = "flex";
@@ -43,38 +40,37 @@
       else {
         this.previewImg.style.display = "none";
       }
-    
     },
 
     sendMessage() {
     // отправка в чат текстовых сообщений
     this.input_mss = document.querySelector('#send_message_input').value;
-    console.log(this.input_mss);
+    this.body_chat = document.querySelector('.body_chat');
+
+    if(this.input_mss != '') {
     this.sendMessageTxt = document.createElement('p');
     this.sendMessageTxt.className = 'messageSendText';
     this.sendMessageTxt.innerHTML = this.input_mss;
-
-    console.log(this.sendMessageTxt);
-    document.querySelector('.body_chat').append(this.sendMessageTxt);
-    document.querySelector('#send_message_input').value = ' ';
+    this.body_chat.append(this.sendMessageTxt);
+    document.querySelector('#send_message_input').value = '';
+    }
 
     // отправка картинки в  чат
-    if(this.file){
-    let messageSendBody = document.createElement('img');
-    messageSendBody.className = 'messageSendBody';
-    messageSendBody = this.previewImg;
-    // messageSendBody.cloneNode(true);
-    document.querySelector('.body_chat').append(messageSendBody.cloneNode(true));
-    // messageSendBody.remove();
-    // this.previewImg = '';
-    // document.querySelector('.body_chat').cloneNode(messageSendBody);
-        }
+    else if(this.file){
+    this.messageSendImg = document.createElement('img');
+    this.messageSendImg.className = 'messageSendBody';
+    this.messageSendImg.src = this.previewImg.src;
+    this.valid = this.body_chat.append(this.messageSendImg.cloneNode(false));
+    this.previewImg.style.display = "none";
+    }
+    else {
+      // document.querySelector('.enter_message').style.border = '1ps solid red';
+      console.log("НЕВАЛИДНО!");
+         }
       }
     }  
   }
-  
 </script>
-
 
 <style>
 #app_chat {
@@ -91,7 +87,7 @@
 /* Тело чата */
 .body_chat {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
   width: auto;
