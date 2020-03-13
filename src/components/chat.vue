@@ -78,12 +78,11 @@
 <style>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400);
 #app_chat {
-  /* display: flex; */
-  /* align-content: stretch ; */
+  margin: 0 auto;
   position:relative;
   width: auto;
   max-width: 1000px;
-  height: 700px;
+  height: 100vh;
   border: 1px solid black;
   background-color:  rgba(147, 255, 147, 0.356);
 }
