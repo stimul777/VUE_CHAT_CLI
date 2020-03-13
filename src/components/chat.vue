@@ -1,14 +1,17 @@
 <template>
   <div id="app_chat">
     <div class="menu">
-      <div class="back"><i class="fa fa-chevron-circle-left fa-lg" @click = 'GoBack'></i></div>
+      <div class="el_menu">
+        <i class="fa fa-chevron-circle-left fa-lg" @click = 'GoBack'></i>
+        <i class="fa fa-refresh" @click = 'Reload'></i>
+      </div>
     </div>
   <div class="body_chat"></div>
   <div class="elements_conteiner" >
     <div class="button_add_file">
        <label class="button_add_file_label">
-         <span class="button_add_file_title"><i class="fa fa-paperclip fa-2x" ></i></span>
-         <input type="file" accept="image/*" id="button_add_img" @input = 'uploadImg'>
+        <span class="button_add_file_title"><i class="fa fa-paperclip fa-2x" ></i></span>
+        <input type="file" accept="image/*" id="button_add_img" @input = 'uploadImg'>
       </label>   
      </div> 
      <div class = "enter_message"><input type="text" id = 'send_message_input' @keyup.enter = "sendMessage" placeholder="Введите сообщение..." value=""/> </div>
@@ -25,6 +28,7 @@
   // },
   methods: {
     uploadImg() {
+      // подгружаем картинку в предпросмотр
       this.file = document.querySelector('#button_add_img').files[0];
       this.previewImg = document.querySelector('#img_conteiner_box');
       this.reader = new FileReader();
@@ -41,35 +45,51 @@
     },
 
     sendMessage() {
-    // отправка в чат текстовых сообщений
-    this.input_mss = document.querySelector('#send_message_input').value;
-    this.body_chat = document.querySelector('.body_chat');
+      // отправка в чат текстовых сообщений
+      this.input_mss = document.querySelector('#send_message_input').value;
+      this.body_chat = document.querySelector('.body_chat');
+      this.input_mss.value;
 
-    if(this.input_mss != '') {
-      this.sendMessageTxt = document.createElement('p');
-      this.sendMessageTxt.className = 'messageSendText';
-      this.sendMessageTxt.innerHTML = this.input_mss;
-      this.body_chat.append(this.sendMessageTxt);
-      document.querySelector('#send_message_input').value = '';
-    }
+      if(this.input_mss != '') {
+        document.querySelector('#send_message_input').style.border = '2px solid green';
+        this.sendMessageTxt = document.createElement('p');
+        this.sendMessageTxt.className = 'messageSendText';
+        this.sendMessageTxt.innerHTML = this.input_mss;
+        this.body_chat.prepend(this.sendMessageTxt);
+        document.querySelector('#send_message_input').value = '';
 
-    // отправка картинки в  чат
-    else if(this.file){
-      this.messageSendImg = document.createElement('img');
-      this.messageSendImg.className = 'messageSendBody';
-      this.messageSendImg.src = this.previewImg.src;
-      this.body_chat.append(this.messageSendImg.cloneNode(false));
-      this.previewImg.style.display = "none";
-      this.file = null;
-    }
-    else {
-      // document.querySelector('.enter_message').style.border = '1ps solid red';
-      console.log("НЕВАЛИДНО!");
-         }
-      },
+        // вставка текущего времени в сообщения 
+        this.Data = new Date();
+        this.Hour = this.Data.getHours();
+        this.Minutes = this.Data.getMinutes();
+        this.Seconds = this.Data.getSeconds();
+        this.sendMsgTxtDate = document.createElement('p');
+        this.sendMsgTxtDate.className = 'message_timestamp_right';
+        this.sendMsgTxtDate.innerHTML = "Отправлено: "+this.Hour+":"+this.Minutes+":"+this.Seconds;
+        this.sendMessageTxt.append(this.sendMsgTxtDate);
+      }
 
+      // отправка картинки в  чат
+      else if(this.file){
+        document.querySelector('#send_message_input').style.border = '2px solid green';
+        this.messageSendImg = document.createElement('img');
+        this.messageSendImg.className = 'messageSendImg';
+        this.messageSendImg.src = this.previewImg.src;
+        this.body_chat.prepend(this.messageSendImg.cloneNode(false));
+        this.previewImg.style.display = 'none';
+        this.file = null;
+      }
+      // валидация
+      else {
+        document.querySelector('#send_message_input').style.border = '2px solid red';
+        
+          }
+        },
     GoBack() {
-        window.history.back()
+        window.history.back();
+      },
+    Reload() {
+        location.reload();
       },
     }  
   }
@@ -83,21 +103,35 @@
   width: auto;
   max-width: 1000px;
   height: 100vh;
-  border: 1px solid black;
   background-color:  rgba(147, 255, 147, 0.356);
+  border-radius: 20px;
 }
 
 /* Тело чата */
 .body_chat {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  flex-direction: column-reverse;
+  /* justify-content: flex-end; */
   align-items: flex-end;
-  position: inherit;
+  /* position: inherit; */
   width: auto;
   height: 84%;
-  border: 1px solid red;
-  overflow-x: hidden;
+  /* border: 1px solid red; */
+  overflow-x: auto;
+
+}
+
+/* кастомный скролл */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 
 /* Шапка  */
@@ -110,13 +144,14 @@
     height: 50px; 
     background: rgba(82,179,217,0.9);
     z-index: 100;
+    border-radius: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
 }
 
- .back {
+ .el_menu {
     position: absolute; 
     width: 90px;
     height: 50px;
@@ -126,10 +161,18 @@
     line-height: 50px;
     font-size: 30px;
     padding-left: 10px;
-    cursor: pointer;
     background-color: rgb(147, 255, 147);
-     border-radius: 10px;
+    border-radius: 10px;
 } 
+
+.el_menu .fa-refresh {
+  padding-left: 15px;
+  cursor: pointer;
+}
+
+.el_menu .fa-lg {
+  cursor: pointer;
+}
 
 /* Ввод сообщений */
 .elements_conteiner {
@@ -141,7 +184,7 @@
   width: 100%;
   /* border: 1px solid  black; */
  background-color: rgb(147, 255, 147);
- 
+ border-radius: 20px;
 }
 
 #img_conteiner_box {
@@ -151,19 +194,20 @@
   border: 2px solid rgb(0, 173, 0);
   background-color: rgb(147, 255, 147);
   border-radius: 10px;
-  filter: blur(1px);
+  filter: blur(0.5px);
 }
 
 .enter_message {
   width: 100%;
 }
 
-.messageSendBody {
-  margin: 5px;
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-  background-color: red;
+.messageSendImg {
+  /* display: flex;
+  flex-direction: column-reverse; */
+  padding-right: 20px;
+  padding-bottom: 10px;
+  width: 200px;
+  height: 150px;
 }
 
 .enter_message input {
@@ -173,24 +217,30 @@
     border: none;
     outline: none;
     color: #666;
-    
 }
 
-/* Cообщения в чате*/
+#send_message_input {
+ border-radius: 10px;
+ text-indent: 50px;
+}
+
+/* Cообщения в теле чата*/
   .messageSendText {
+    display: flex;
+    flex-wrap: wrap;
+    word-wrap: inherit;
     position: relative;
-    margin-bottom: 10px;
-    margin-left: calc(100% - 240px);
-    margin-right: 20px;
-    padding: 10px;
-    background-color: #f8e896;
     width: 200px;
     height: 50px;
+    margin-bottom: 10px;
+    margin-left: calc(100% - 240px);
+    margin-right: 30px;
+    padding: 10px;
+    background-color: #f8e896;
     text-align: left;
     font: 500 .9em 'Open Sans', sans-serif;
-    border: 1px solid #dfd087;
+    border: 1px solid #ccb856;
     border-radius: 20px;
-    
   }
 
   .messageSendText:after {
@@ -217,6 +267,14 @@
     right: -17px;
 }
 
+.message_timestamp_right {
+    position: relative;
+    color: rgb(131, 131, 131);
+    position: absolute;
+    font-size: 11px;
+    bottom: 1px;
+}
+
 /* кнопка добавить файл */
 .button_add_file {
     /* bottom: 22px; */
@@ -226,15 +284,16 @@
     /* z-index: 100; */
     cursor: pointer;
     background-color: rgb(147, 255, 147);
+    border-radius: 20px;
 }
 
 .button_add_file:active {
     opacity: 0.9;
 }
 
-.button_add_file .button_add_file_form-group{
-  padding: 1em; margin:1em
-}
+ .button_add_file .button_add_file_form-group{
+   /* padding: 1em; margin:1em */
+ }
 
 .button_add_file input[type=file]{
   outline: 0; opacity:0; pointer-events: none; user-select:none;
@@ -242,15 +301,14 @@
 
 .button_add_file .button_add_file_label{
   display: block;
-  width: 10px;
-  height: 10px;
+  width: 50px;
+  height: 50px;
   border: 2px dashed grey;
   border-radius: 15px;
-  padding: 1.2em;
+  /* padding: 1.2em; */
   transition: border 400ms ease;
   cursor: pointer;
-  text-align: center;
-  
+  /* text-align: center; */
 }
 
 .button_add_file .button_add_file_label:hover{
@@ -258,8 +316,10 @@
   }
 
 .button_add_file .button_add_file_label .button_add_file_title i {
+  padding: 12px;
   width: 20px;
-  
+  color: black;
+  padding: -10px;
 }
-  
+
 </style>
