@@ -11,7 +11,7 @@
          <input type="file" accept="image/*" id="button_add_img" @input = 'uploadImg'>
       </label>   
      </div> 
-     <div class="enter_message"><input  type="text" @keyup.enter = "sendMessage" placeholder="Введите сообщение..."/> </div>
+     <div class="enter_message"><input type="text" id = 'send_message_input' @keyup.enter = "sendMessage" placeholder="Введите сообщение..." value=""/> </div>
       <div><img id="img_conteiner_box" src="#" /></div>
   </div>
   </div>
@@ -20,43 +20,55 @@
   <script>
   export default {
   el: '#app_chat',
-  data() {
-      return {
-      }
-  },
-
+  // data() {
+     
+  // },
+  
   methods: {
-    uploadImg: function() {
-     this.test = 110;
-     let file = document.querySelector('#button_add_img').files[0];
-     let previewImg = document.querySelector('#img_conteiner_box');
-     let reader = new FileReader();
-     reader.onloadend = function () {
-      previewImg.src = reader.result;
+    uploadImg() {
+     this.previewImg = false;
+     this.reader = '';
+     this.file = '';
+     this.file = document.querySelector('#button_add_img').files[0];
+     this.previewImg = document.querySelector('#img_conteiner_box');
+     this.reader = new FileReader();
+
+     this.reader.onloadend = () => {
+      this.previewImg.src = this.reader.result;
      }
-      if (file) {
-        reader.readAsDataURL(file);
-        previewImg.style.display = "flex";
+      if (this.file) {
+        this.reader.readAsDataURL(this.file);
+        this.previewImg.style.display = "flex";
       } 
       else {
-        previewImg.style.display = "none";
+        this.previewImg.style.display = "none";
       }
+    
     },
 
-    sendMessage: function() {
-    // const file = document.querySelector('#button_add_img').files[0];
-    // if(!file) {
-    //   // alert('введите сообщение!');
-    //   return;
-    //     }
+    sendMessage() {
+    // отправка в чат текстовых сообщений
+    this.input_mss = document.querySelector('#send_message_input').value;
+    console.log(this.input_mss);
+    this.sendMessageTxt = document.createElement('p');
+    this.sendMessageTxt.className = 'messageSendText';
+    this.sendMessageTxt.innerHTML = this.input_mss;
+
+    console.log(this.sendMessageTxt);
+    document.querySelector('.body_chat').append(this.sendMessageTxt);
+    document.querySelector('#send_message_input').value = ' ';
+
+    // отправка картинки в  чат
+    if(this.file){
     let messageSendBody = document.createElement('img');
     messageSendBody.className = 'messageSendBody';
-    // messageSendBody= this.reader;
-    console.log(this.test);
-    
-
-   document.querySelector('.body_chat').append(messageSendBody);
-
+    messageSendBody = this.previewImg;
+    // messageSendBody.cloneNode(true);
+    document.querySelector('.body_chat').append(messageSendBody.cloneNode(true));
+    // messageSendBody.remove();
+    // this.previewImg = '';
+    // document.querySelector('.body_chat').cloneNode(messageSendBody);
+        }
       }
     }  
   }
@@ -85,10 +97,16 @@
   width: auto;
   height: 84%;
   border: 1px solid red;
-  
-
 }
 
+/* сообщения */
+  .messageSendText {
+    display: flex;
+    width: 60px;
+    height: 20px;
+    border: 1px solid black;
+  }
+  
 /* Шапка  */
 .menu {
     /* position: fixed; */
