@@ -10,7 +10,7 @@ import chat from './components/chat.vue'
 export default {
   name: 'app',
   components: {
-    chat
+    chat,
   },
 }
 </script>

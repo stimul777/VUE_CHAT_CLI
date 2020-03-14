@@ -4,6 +4,7 @@
       <div class="el_menu">
         <i class="fa fa-chevron-circle-left fa-lg" @click = 'GoBack'></i>
         <i class="fa fa-refresh" @click = 'Reload'></i>
+        <img class="icon_vue" src = "@/assets/logo.png" />
       </div>
     </div>
   <div class="body_chat"></div>
@@ -101,8 +102,8 @@
   margin: 0 auto;
   position:relative;
   width: auto;
+  height: 95vh;
   max-width: 1000px;
-  height: 100vh;
   background-color:  rgba(147, 255, 147, 0.356);
   border-radius: 20px;
 }
@@ -149,6 +150,13 @@
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+}
+
+.icon_vue {
+  position: absolute;
+  padding-left: 100%;
+  width: 50px;
+  height: 50px;
 }
 
  .el_menu {
@@ -205,7 +213,7 @@
   /* display: flex;
   flex-direction: column-reverse; */
   padding-right: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   width: 200px;
   height: 150px;
 }
@@ -231,17 +239,29 @@
     word-wrap: inherit;
     position: relative;
     width: 200px;
-    height: 50px;
-    margin-bottom: 10px;
+    height: auto;
+    margin-bottom: 15px;
     margin-left: calc(100% - 240px);
     margin-right: 30px;
-    padding: 10px;
+    padding: 20px;
     background-color: #f8e896;
     text-align: left;
     font: 500 .9em 'Open Sans', sans-serif;
     border: 1px solid #ccb856;
     border-radius: 20px;
+    
+  
   }
+
+  .message_timestamp_right {
+    /* position: relative; */
+    position: absolute;
+    margin: 4px;
+    color: rgb(131, 131, 131);
+    
+    font-size: 11px;
+    bottom: 1px;
+}
 
   .messageSendText:after {
     content: '';
@@ -267,13 +287,6 @@
     right: -17px;
 }
 
-.message_timestamp_right {
-    position: relative;
-    color: rgb(131, 131, 131);
-    position: absolute;
-    font-size: 11px;
-    bottom: 1px;
-}
 
 /* кнопка добавить файл */
 .button_add_file {
