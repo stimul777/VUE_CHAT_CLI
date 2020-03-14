@@ -4,7 +4,6 @@
       <div class="el_menu">
         <i class="fa fa-chevron-circle-left fa-lg" @click = 'GoBack'></i>
         <i class="fa fa-refresh" @click = 'Reload'></i>
-        <img class="icon_vue" src = "@/assets/logo.png" />
       </div>
     </div>
   <div class="body_chat"></div>
@@ -16,19 +15,15 @@
       </label>   
      </div> 
      <div class = "enter_message"><input type="text" id = 'send_message_input' @keyup.enter = "sendMessage" placeholder="Введите сообщение..." value=""/> </div>
-      <div><img id="img_conteiner_box" src="#" /></div>
+     <img id="img_conteiner_box" src="#" />
   </div>
   </div>
 </template>
 
   <script>
   export default {
-  el: '#app_chat',
-  // data() {
-
-  // },
-  methods: {
-    uploadImg() {
+    methods: {
+     uploadImg() {
       // подгружаем картинку в предпросмотр
       this.file = document.querySelector('#button_add_img').files[0];
       this.previewImg = document.querySelector('#img_conteiner_box');
@@ -36,28 +31,27 @@
       this.reader.onloadend = () => {
       this.previewImg.src = this.reader.result;
      }
-      if (this.file) {
+
+      if(this.file) {
         this.reader.readAsDataURL(this.file);
         this.previewImg.style.display = "flex";
       } 
-      else {
-        this.previewImg.style.display = "none";
-      }
     },
 
     sendMessage() {
       // отправка в чат текстовых сообщений
-      this.input_mss = document.querySelector('#send_message_input').value;
+      this.send_message_input = document.querySelector('#send_message_input');
+      this.input_mss = this.send_message_input.value;
       this.body_chat = document.querySelector('.body_chat');
       this.input_mss.value;
 
       if(this.input_mss != '') {
-        document.querySelector('#send_message_input').style.border = '2px solid green';
+        this.send_message_input.style.border = '2px solid green';
         this.sendMessageTxt = document.createElement('p');
         this.sendMessageTxt.className = 'messageSendText';
         this.sendMessageTxt.innerHTML = this.input_mss;
         this.body_chat.prepend(this.sendMessageTxt);
-        document.querySelector('#send_message_input').value = '';
+        this.send_message_input.value = '';
 
         // вставка текущего времени в сообщения 
         this.Data = new Date();
@@ -72,7 +66,7 @@
 
       // отправка картинки в  чат
       else if(this.file){
-        document.querySelector('#send_message_input').style.border = '2px solid green';
+        this.send_message_input.style.border = '2px solid green';
         this.messageSendImg = document.createElement('img');
         this.messageSendImg.className = 'messageSendImg';
         this.messageSendImg.src = this.previewImg.src;
@@ -80,10 +74,10 @@
         this.previewImg.style.display = 'none';
         this.file = null;
       }
+
       // валидация
       else {
-        document.querySelector('#send_message_input').style.border = '2px solid red';
-        
+        this.send_message_input.style.border = '2px solid red';
           }
         },
     GoBack() {
@@ -98,6 +92,7 @@
 
 <style>
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400);
+
 #app_chat {
   margin: 0 auto;
   position:relative;
@@ -112,65 +107,51 @@
 .body_chat {
   display: flex;
   flex-direction: column-reverse;
-  /* justify-content: flex-end; */
   align-items: flex-end;
-  /* position: inherit; */
   width: auto;
   height: 84%;
-  /* border: 1px solid red; */
   overflow-x: auto;
 
 }
 
 /* кастомный скролл */
 ::-webkit-scrollbar {
-    width: 12px;
+  width: 12px;
 }
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-    border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }
 
 /* Шапка  */
 .menu {
-    /* position: fixed; */
-    /* top: 0px; */
-    /* left: 0px; */
-    /* right: 0px; */
-    width: 100%;
-    height: 50px; 
-    background: rgba(82,179,217,0.9);
-    z-index: 100;
-    border-radius: 20px;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-.icon_vue {
-  position: absolute;
-  padding-left: 100%;
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 50px; 
+  background: rgba(82,179,217,0.9);
+  z-index: 100;
+  border-radius: 20px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
  .el_menu {
-    position: absolute; 
-    width: 90px;
-    height: 50px;
-    top: 0px;
-    left: 0px;
-    color: black;
-    line-height: 50px;
-    font-size: 30px;
-    padding-left: 10px;
-    background-color: rgb(147, 255, 147);
-    border-radius: 10px;
+  position: absolute; 
+  width: 90px;
+  height: 50px;
+  top: 0px;
+  left: 0px;
+  color: black;
+  line-height: 50px;
+  font-size: 30px;
+  padding-left: 10px;
+  background-color: rgb(147, 255, 147);
+  border-radius: 10px;
 } 
 
 .el_menu .fa-refresh {
@@ -187,12 +168,9 @@
   display: flex;
   position:absolute; 
 	bottom:0; 
-  /* margin-top: auto;
-  top: 200px; */
   width: 100%;
-  /* border: 1px solid  black; */
- background-color: rgb(147, 255, 147);
- border-radius: 20px;
+  background-color: rgb(147, 255, 147);
+  border-radius: 20px;
 }
 
 #img_conteiner_box {
@@ -210,8 +188,6 @@
 }
 
 .messageSendImg {
-  /* display: flex;
-  flex-direction: column-reverse; */
   padding-right: 20px;
   padding-bottom: 20px;
   width: 200px;
@@ -230,10 +206,11 @@
 #send_message_input {
  border-radius: 10px;
  text-indent: 50px;
+ height: 90%;
 }
 
 /* Cообщения в теле чата*/
-  .messageSendText {
+.messageSendText {
     display: flex;
     flex-wrap: wrap;
     word-wrap: inherit;
@@ -249,21 +226,17 @@
     font: 500 .9em 'Open Sans', sans-serif;
     border: 1px solid #ccb856;
     border-radius: 20px;
-    
-  
   }
 
-  .message_timestamp_right {
-    /* position: relative; */
+.message_timestamp_right {
     position: absolute;
     margin: 4px;
-    color: rgb(131, 131, 131);
-    
-    font-size: 11px;
+    color: rgba(131, 131, 131, 0.521);
+    font-size: 10px;
     bottom: 1px;
 }
 
-  .messageSendText:after {
+.messageSendText:after {
     content: '';
     position: absolute;
     width: 0;
@@ -290,23 +263,16 @@
 
 /* кнопка добавить файл */
 .button_add_file {
-    /* bottom: 22px; */
-    height: 100%;
-    background-repeat: no-repeat;
-    /* background-size: cover; */
-    /* z-index: 100; */
-    cursor: pointer;
-    background-color: rgb(147, 255, 147);
-    border-radius: 20px;
+  height: 100%;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-color: rgb(147, 255, 147);
+  border-radius: 20px;
 }
 
 .button_add_file:active {
-    opacity: 0.9;
+  opacity: 0.9;
 }
-
- .button_add_file .button_add_file_form-group{
-   /* padding: 1em; margin:1em */
- }
 
 .button_add_file input[type=file]{
   outline: 0; opacity:0; pointer-events: none; user-select:none;
@@ -318,14 +284,12 @@
   height: 50px;
   border: 2px dashed grey;
   border-radius: 15px;
-  /* padding: 1.2em; */
   transition: border 400ms ease;
   cursor: pointer;
-  /* text-align: center; */
 }
 
 .button_add_file .button_add_file_label:hover{
-  border:2px solid #000
+  border:2px solid #000;
   }
 
 .button_add_file .button_add_file_label .button_add_file_title i {
