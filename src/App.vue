@@ -1,16 +1,25 @@
 <template>
   <div id="app">
-    <chat />
+    <startScreen />
+    <bodyChat />
+    <!-- <toolBar /> -->
   </div>
 </template>
 
 <script>
-import chat from './components/chat.vue'
+import startScreen from './components/startScreen.vue'
+
+// import adminPanel from './components/adminPanel.vue'
+import bodyChat from './components/bodyChat.vue'
+
 
 export default {
   name: 'app',
   components: {
-    chat,
+    startScreen,
+    // toolBar,
+    // adminPanel,
+    bodyChat,
   },
 }
 </script>
