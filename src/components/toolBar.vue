@@ -1,40 +1,48 @@
 <template>
-    <div>
+    <section>
         <div class="toolBar">
-            <div class="el_menu">
-                <i class="fa fa-chevron-circle-left fa-lg" 
-                    @click = 'GoBack'></i>
+            <div class="toolBar__el-menu">
+                <i class="fa fa-chevron-circle-left fa-lg"> </i>
                 <i class="fa fa-refresh" 
-                    @click = 'Reload'></i>
+                    @click = 'Reload'
+                ></i>
+                <i class="fa fa-user fa-lg"
+                    @click = 'adminPanel'
+                ></i>
             </div>
         </div>
 
-        <div class="elements_conteiner">
+        <div class="messageBar">
             <div class="button_add_file">
                 <label class="button_add_file_label">
                     <span class="button_add_file_title"><i class="fa fa-paperclip fa-2x" ></i></span>
                     <input type="file" accept="image/*" id="button_add_img"
-                           @input = 'uploadImg'>
+                        @change="uploadImg"
+                    >
                 </label>   
             </div> 
             <div class = "enter_message">
-                <input type="text" id = 'send_message_input' placeholder="Введите сообщение..." value=""
-                 @keyup.enter = "sendMessage" 
-                 v-model = "messageText"
+                <input type="text" id = 'send_message_input' placeholder="Введите сообщение..."
+                    @keyup.enter = "sendMessage" 
+                    v-model = "messageText"
                  >
-                 <p> {{ messageText }}</p>
-
             </div>
-            <img id="img_conteiner_box" src="#" />
+            <img id="img_conteiner_box" src="#" >
         </div>
-    </div>
+    </section>
 </template>
 
 <script >
     export default {
-        // data() {
-        //     messageText: 'messageText'
-        // },
+        data() {
+           return {
+                messageText: '',
+                image: this.image,
+           }
+        },
+        components: {
+
+        },
         methods: {
              Reload() {
                 location.reload();
@@ -42,101 +50,43 @@
 
              sendMessage() {
                  console.log(this.messageText)
-                }
+                },
+
+             uploadImg(event) {
+                 event.preventDefault();
+                 this.image = event.target.files[0];
+                 console.log( this.image);
+                },
+
+                adminPanel() {
+                    this.StartScreenVisible = true
+                    console.log(this.StartScreenVisible)
+                },
+            }
         }
-    }
-
-
-//  export default {
-//     methods: {
-//      uploadImg() {
-//       // подгружаем картинку в предпросмотр
-//       this.file = document.querySelector('#button_add_img').files[0];
-//       this.previewImg = document.querySelector('#img_conteiner_box');
-//       this.reader = new FileReader();
-//       this.reader.onloadend = () => {
-//       this.previewImg.src = this.reader.result;
-//      }
-
-//       if(this.file) {
-//         this.reader.readAsDataURL(this.file);
-//         this.previewImg.style.display = "flex";
-//       } 
-//     },
-
-//     sendMessage() {
-//       // отправка в чат текстовых сообщений
-//       this.send_message_input = document.querySelector('#send_message_input');
-//       this.input_mss = this.send_message_input.value;
-//       this.body_chat = document.querySelector('.body_chat');
-//       this.input_mss.value;
-
-//       if(this.input_mss != '') {
-//         this.send_message_input.style.border = '2px solid green';
-//         this.sendMessageTxt = document.createElement('p');
-//         this.sendMessageTxt.className = 'messageSendText';
-//         this.sendMessageTxt.innerHTML = this.input_mss;
-//         this.body_chat.prepend(this.sendMessageTxt);
-//         this.send_message_input.value = '';
-
-//         // вставка текущего времени в сообщения 
-//         this.Data = new Date();
-//         this.Hour = this.Data.getHours();
-//         this.Minutes = this.Data.getMinutes();
-//         this.Seconds = this.Data.getSeconds();
-//         this.sendMsgTxtDate = document.createElement('p');
-//         this.sendMsgTxtDate.className = 'message_timestamp_right';
-//         this.sendMsgTxtDate.innerHTML = "Отправлено: "+this.Hour+":"+this.Minutes+":"+this.Seconds;
-//         this.sendMessageTxt.append(this.sendMsgTxtDate);
-//       }
-
-//       // отправка картинки в  чат
-//       else if(this.file){
-//         this.send_message_input.style.border = '2px solid green';
-//         this.messageSendImg = document.createElement('img');
-//         this.messageSendImg.className = 'messageSendImg';
-//         this.messageSendImg.src = this.previewImg.src;
-//         this.body_chat.prepend(this.messageSendImg.cloneNode(false));
-//         this.previewImg.style.display = 'none';
-//         this.file = null;
-//       }
-
-//       // валидация
-//       else {
-//         this.send_message_input.style.border = '2px solid red';
-//           }
-//         },
-
-//     GoBack() {
-//         window.history.back();
-//       },
-      
-//     Reload() {
-//         location.reload();
-//       },
-//     }  
-//   }
 </script>
 
-<style >
+<style lang="less" >
+
     /* Шапка  */
     .menu {
     width: 100%;
     height: 50px; 
-    background: rgba(82,179,217,0.9);
+    // background: rgba(82,179,217,0.9);
     z-index: 100;
     border-radius: 20px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+  
     }
 
-    .el_menu {
-    position: absolute; 
-    width: 90px;
+    .toolBar__el-menu {
+    display: flex;
+    width: 150px;
     height: 50px;
-    top: 0px;
+    padding: 10px;
     left: 0px;
     color: black;
     line-height: 50px;
@@ -144,19 +94,26 @@
     padding-left: 10px;
     background-color: rgb(147, 255, 147);
     border-radius: 10px;
+
+        .fa-refresh {
+            padding-left: 15px;
+            cursor: pointer;
+        }
+
+        .fa-lg {
+            cursor: pointer;
+        }
+
+        .fa-user {
+            padding-left: 15px;
+        }
+
     } 
 
-    .el_menu .fa-refresh {
-    padding-left: 15px;
-    cursor: pointer;
-    }
-
-    .el_menu .fa-lg {
-    cursor: pointer;
-    }
+    
 
     /* Ввод сообщений */
-    .elements_conteiner {
+    .messageBar {
     display: flex;
     position:absolute; 
     bottom:0; 
